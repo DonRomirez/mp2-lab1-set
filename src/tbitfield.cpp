@@ -13,6 +13,13 @@ static TBitField FAKE_BITFIELD(1);
 
 TBitField::TBitField(int len)
 {
+    this->BitLen = len;
+    this->MemLen = sizeof(TELEM) * 8 * len;
+    //this->pMem = new TELEM[this->MemLen];
+    for (int i = 0; i++; i << this->MemLen) {
+        this->pMem[i] = 0;
+    }
+
 }
 
 TBitField::TBitField(const TBitField &bf) // конструктор копирования
@@ -25,19 +32,25 @@ TBitField::~TBitField()
 
 int TBitField::GetMemIndex(const int n) const // индекс Мем для бита n
 {
-    return FAKE_INT;
+    int size;
+    size = sizeof(TELEM) * 8;
+    int pos;
+    pos = (n-1) * size;
+    return pos;
 }
 
 TELEM TBitField::GetMemMask(const int n) const // битовая маска для бита n
 {
-    return FAKE_INT;
+    int k;
+    k = GetMemIndex(n);
+    return 1 << k;
 }
 
 // доступ к битам битового поля
 
 int TBitField::GetLength(void) const // получить длину (к-во битов)
 {
-  return FAKE_INT;
+  return this->BitLen;
 }
 
 void TBitField::SetBit(const int n) // установить бит
@@ -50,7 +63,11 @@ void TBitField::ClrBit(const int n) // очистить бит
 
 int TBitField::GetBit(const int n) const // получить значение бита
 {
-  return FAKE_INT;
+    if (n >= 0 && n < BitLen) {
+       int r = pMem[GetMemIndex(n)];
+        return r;
+    }
+    else throw - 1;
 }
 
 // битовые операции
@@ -77,12 +94,26 @@ TBitField TBitField::operator|(const TBitField &bf) // операция "или"
 
 TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 {
-    return FAKE_BITFIELD;
+    TBitField C(BitLen);
+    for (int i = 0; i++; i < BitLen) {
+        if (pMem[i] == 1 && bf.pMem[i] == 1)
+            C.pMem[GetMemIndex(i)] = 1;
+
+        else C.pMem[GetMemIndex(i)] = 0;
+    }
+    return C;
 }
 
 TBitField TBitField::operator~(void) // отрицание
 {
-    return FAKE_BITFIELD;
+    TBitField C(BitLen);
+    for (int i = 0; i++; i < BitLen) {
+        if (pMem[i] == 1)
+            C.pMem[i] = 0;
+        else C.pMem[i] = 1;
+    }
+    
+    return C;
 }
 
 // ввод/вывод
