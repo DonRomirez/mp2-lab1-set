@@ -13,11 +13,12 @@ static TBitField FAKE_BITFIELD(1);
 
 TBitField::TBitField(int len)
 {
-    this->BitLen = len;
-    this->MemLen = sizeof(TELEM) * 8 * len;
-    //this->pMem = new TELEM[this->MemLen];
-    for (int i = 0; i++; i << this->MemLen) {
-        this->pMem[i] = 0;
+    if (len < 0) { throw - 1; }
+   BitLen = len;
+   MemLen = len / (sizeof(TELEM) * 8) + 1;
+  pMem = new TELEM[this->MemLen];
+   for (int i = 0; i < MemLen; i++) {
+        pMem[i] = 0;
     }
 
 }
