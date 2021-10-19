@@ -111,11 +111,23 @@ TSet TSet::operator~(void) // дополнение
 // перегрузка ввода/вывода
 
 istream &operator>>(istream &istr, TSet &s) // ввод
-{
+{ 
+    int check;
+    for (int i = 0; i < s.MaxPower; i++)
+    {
+        istr >> check;
+        if(check)
+        s.InsElem(i);
+    }
     return istr;
 }
 
 ostream& operator<<(ostream &ostr, const TSet &s) // вывод
 {
+    for (int i = 0; i < s.MaxPower; i++)
+    { 
+        if (s.IsMember(i))
+            ostr << i<<" ";
+    }
     return ostr;
 }
