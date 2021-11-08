@@ -15,6 +15,7 @@ TBitField::TBitField(int len)
 {
     if (len < 0) { throw - 1; }
    BitLen = len;
+   if (len % 32 == 0) MemLen = len / (sizeof(TELEM) * 8);
    MemLen = len / (sizeof(TELEM) * 8) + 1;
   pMem = new TELEM[MemLen];
    for (int i = 0; i < MemLen; i++) { 
@@ -155,13 +156,14 @@ TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 
 TBitField TBitField::operator~(void) // отрицание
 {
-    TBitField NewBf(BitLen);
-    for (int i = 0; i < BitLen; i++)
-    {
-        if (GetBit(i) == 0)
-            NewBf.SetBit(i);
-    }
-    return NewBf;
+    int len = BitLen;
+    TBitField war(len);
+    for (int i = 0; i < MemLen; i++)
+        war.pMem[i] = ~pMem[i];
+    int k = len % (sizeof(TELEM) * 8);
+    int v = (1 << k) - 1;
+    war.pMem[MemLen - 1] &= v;
+    return war;
 }
 
 // ввод/вывод
